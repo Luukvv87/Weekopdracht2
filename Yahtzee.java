@@ -23,8 +23,8 @@ x 5. Maak een losse methode vasthouden(). Via een Scanner vraagt het programma o
 x 6. Loop in de tweede worp over de arraylist heen en alleen als in de blokkeerarray een 0 staat wordt de dobbelsteen opnieuw geworpen. 
 
  Nog meer objecten:
- 7. Maak een klasse Worp, met een veld van het type int array met lengte 5. Een methode die de worp uitslag weergeeft.
- 8. Maak een klasse Speler, met een veld worp-geschiedenis, dit is een array met een flinke lengte of een arraylist.
+x 7. Maak een klasse Worp, met een veld van het type int array met lengte 5. Een methode die de worp uitslag weergeeft.
+x 8. Maak een klasse Speler, met een veld worp-geschiedenis, dit is een array met een flinke lengte of een arraylist.
  9. Zorg dat aan het einde van een worp-cyclus zoals gemaakt tot stap zes, opgeslagen wordt in een Worp-object.
  	Voeg deze toe aan de worp-geschiedenis van de speler.
 
@@ -38,7 +38,7 @@ public class Yahtzee {
 		Scanner scanner = new Scanner(System.in);
 		
 		while (doorspelen) {
-			System.out.println("Welkom bij Yahtzee! Wat wil je doen?\n\n1 Spelen\n2 Stoppen");
+			System.out.println("Welkom bij Yahtzee. Wat wil je doen?\n\n1 Spelen\n2 Stoppen");
 			int keuze = scanner.nextInt();				//Veranderen in enter=doorgaan en q=stoppen
 			if(keuze == 1){
 				YahtzeeSpel spel = new YahtzeeSpel();
@@ -55,7 +55,7 @@ public class Yahtzee {
 }
 
 class YahtzeeSpel{
-	ArrayList<Dobbelsteen> dobbelstenen = new ArrayList<Dobbelsteen>();
+	static ArrayList<Dobbelsteen> dobbelstenen = new ArrayList<Dobbelsteen>();
 	int[] blokkeren = {0,0,0,0,0};
 	
 	YahtzeeSpel(){
@@ -63,11 +63,11 @@ class YahtzeeSpel{
 			Dobbelsteen ds = new Dobbelsteen();
 			dobbelstenen.add(ds);
 		}
-		System.out.println(dobbelstenen);
+//		System.out.println(dobbelstenen);
 	}
 	
 	void spelen(){
-		System.out.println("\nWe gaan spelen!\n\nWorp 1:");
+		System.out.println("\nWe gaan beginnen!\n\nWorp 1:");
 		for(int x = 0; x<5;x++) {
 			dobbelstenen.get(x).waarde = dobbelstenen.get(x).werpen();
 		}
@@ -75,9 +75,16 @@ class YahtzeeSpel{
 		vasthouden();
 		System.out.println("\nWorp 2:");
 		vervolg();
+		System.out.println(dobbelstenen);
 		vasthouden();
 		System.out.println("\nWorp 3:");
 		vervolg();
+		System.out.println(dobbelstenen);
+		System.out.println("\nJe beurt is voorbij. Je hebt gegooid:");
+		System.out.println(dobbelstenen);
+		Speler speler = new Speler();
+		Worp.worpUitslag();
+//		System.out.println("\nWorpgeschiedenis:\n" + speler.worpGeschiedenis);		//Komt niet goed in beeld
 	}
 
 	void vasthouden() {
@@ -102,7 +109,6 @@ class YahtzeeSpel{
 				dobbelstenen.get(x).waarde = dobbelstenen.get(x).werpen();
 			}	
 		}
-		System.out.println(dobbelstenen);
 	}
 }
 
@@ -111,11 +117,29 @@ class Dobbelsteen{
 	
 	int werpen() {
 		Random random = new Random();
-		int worp = random.nextInt(6)+1;
-		return worp;
+		waarde = random.nextInt(6)+1;
+		return waarde;
 	}
 	@Override
 	public String toString() {
 		return waarde + "";
 	}
+}
+
+class Worp{
+	static int[] worpen = new int[5];
+	
+	static Worp worpUitslag() {
+		Worp worp = new Worp();
+		for (int x = 0 ; x < 5 ; x++) {
+			worp.worpen[x] = YahtzeeSpel.dobbelstenen.get(x).waarde;
+		}
+		Speler speler = new Speler();
+		speler.worpGeschiedenis.add(worp);
+		return worp;
+	}
+}
+
+class Speler{
+	static ArrayList<Worp> worpGeschiedenis = new ArrayList<Worp>();
 }
